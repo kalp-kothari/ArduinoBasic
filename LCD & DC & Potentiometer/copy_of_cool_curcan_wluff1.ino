@@ -1,0 +1,47 @@
+// C++ code
+//
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+int en3 = 3, in3 = 4, in4 = 2, en2 = 6, in1 = 7, in2 = 8, pm = A0;
+void setup()
+{
+  pinMode(en3, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+  pinMode(en2, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(pm, INPUT);
+  lcd.init();
+  lcd.backlight();
+}
+
+void loop()
+{
+  int input = analogRead(pm);
+  int input1 = map(input, 0, 1023, 0, 255);
+  int input2 = map(input, 0, 1023, 255, 0);
+  //One motor sppeds up while the other slows down
+  digitalWrite(in3, HIGH);
+  //digitalWrite(in3,LOW);
+  digitalWrite(in4, LOW);
+  //digitalWrite(in4, HIGH);
+  analogWrite(en3, input1);
+  
+  digitalWrite(in1, HIGH);
+  //digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  //digitalWrite(in2,HIGH);
+  analogWrite(en2, input2);
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Pot: ");
+  lcd.print(input);
+  lcd.setCursor(0,1);
+  lcd.print("PWM: ");
+  lcd.print(input1);
+  delay(500);
+  
+}
